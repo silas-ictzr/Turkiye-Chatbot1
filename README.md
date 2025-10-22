@@ -95,8 +95,9 @@ turkiye-chatbot1/
 # ⚙️ Kurulum Adımları
 1️⃣ Projeyi klonla
 ```
-git clone https://github.com/silas-ictzr/turkiye-chatbot.git
-cd turkiye-chatbot
+git clone https://github.com/silas-ictzr/turkiye-chatbot1.git
+cd turkiye-chatbot1/TürkiyeChatbot
+
 ```
 2️⃣ Sanal ortam oluştur ve etkinleştir
 ```
