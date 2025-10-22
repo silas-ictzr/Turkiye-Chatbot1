@@ -77,17 +77,20 @@ Veri boyutu küçük tutulmuştur; amaç performans değil, RAG sürecini öğre
 
 # 📂 Proje Yapısı
 ```
-turkiye-chatbot/
-├── app.py                   
-├── docs/
-│   ├── turkiye_bilgileri.txt 
-│   ├── bolumler/             
-│   └── temizlenmis/          
-├── turkiye_index.faiss       
-├── turkiye_files.npy        
-├── .env                      
-├── .gitignore                
-└── requirements.txt          
+turkiye-chatbot1/
+├── TürkiyeChatbot/
+│   ├── docs/
+│   │   ├── bolumler/
+│   │   ├── temizlenmis/
+│   │   └── turkiye_bilgileri.txt
+│   ├── requirements.txt
+│   ├── streamlit_app.py
+│   ├── turkiye_files.npy
+│   └── turkiye_index.faiss
+├── images/
+│   └── (proje görselleri)
+└── README.md
+
 ```
 # ⚙️ Kurulum Adımları
 1️⃣ Projeyi klonla
