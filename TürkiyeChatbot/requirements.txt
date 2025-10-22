@@ -6,3 +6,4 @@ PyPDF2
 langchain
 chromadb
 faiss-cpu
+sentence-transformers
