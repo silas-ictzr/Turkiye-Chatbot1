@@ -12,10 +12,11 @@ Böylece model, yalnızca önceden yüklenen dosyalardaki bilgilere dayanarak g�
 
 # Deploy
 
+https://turkiye-chatbot1-x9lebdsf9tnhcmab3qykhb.streamlit.app/
 
-![Uygulama ekran görüntüsü](TürkiyeChatbot/images/ekran1.png)
+![Uygulama ekran görüntüsü](images/ekran1.png)
 
-![Uygulama ekran görüntüsü](TürkiyeChatbot/images/ekran2.png)
+![Uygulama ekran görüntüsü](images/ekran2.png)
 
 
 
