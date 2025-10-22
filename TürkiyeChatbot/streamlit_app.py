@@ -30,14 +30,23 @@ client = OpenAI(api_key=api_key)
 def load_components():
     try:
         model = SentenceTransformer("paraphrase-multilingual-MiniLM-L12-v2")
-        index = faiss.read_index("turkiye_index.faiss")
-        file_names = np.load("turkiye_files.npy")
+
+        # 🔧 FAISS ve Numpy dosyalarının doğru yoldan yüklenmesi
+        base_path = os.path.dirname(__file__)  # Bu dosyanın bulunduğu klasör
+        faiss_path = os.path.join(base_path, "turkiye_index.faiss")
+        npy_path = os.path.join(base_path, "turkiye_files.npy")
+
+        if not os.path.exists(faiss_path):
+            st.error(f"❌ FAISS dosyası bulunamadı: {faiss_path}")
+            st.stop()
+
+        index = faiss.read_index(faiss_path)
+        file_names = np.load(npy_path)
+
         return model, index, file_names
     except Exception as e:
         st.error(f"❌ Model yüklenirken hata: {e}")
         st.stop()
-
-model, index, file_names = load_components()
 
 # -----------------------------
 # Benzer içerik arama
@@ -95,3 +104,4 @@ if st.button("Sor"):
             st.success(answer)
     else:
         st.warning("Lütfen bir soru yazın.")
+
