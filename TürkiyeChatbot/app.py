@@ -26,37 +26,17 @@ if _is_streamlit:
     @st.cache_resource
     def load_components():
         import os
-📁 Mevcut dizin: /mount/src/turkiye-chatbot1
-
-📄 Dizindeki dosyalar: README.md, .devcontainer, .git, TürkiyeChatbot, images, .streamlit...
-
-❌ turkiye_index.faiss dosyası bulunamadı! Dizin: /mount/src/turkiye-chatbot1        # Mevcut dizini ve dosyaları kontrol et
-        current_dir = os.getcwd()
-        st.write(f"📁 Mevcut dizin: {current_dir}")
-        
-        # Dosyaları ara
-        files_in_dir = os.listdir(current_dir)
-        st.write(f"📄 Dizindeki dosyalar: {', '.join(files_in_dir[:10])}...")
-        
         # Dosyaların varlığını kontrol et
         # Streamlit Cloud kök dizinde çalıştığı için TürkiyeChatbot alt klasörünü ekle
         base_path = "TürkiyeChatbot" if os.path.exists("TürkiyeChatbot") else "."
         faiss_path = os.path.join(base_path, "turkiye_index.faiss")
         npy_path = os.path.join(base_path, "turkiye_files.npy")
         
-        st.write(f"🔍 Aradığım yol: {faiss_path}")
-        st.write(f"🔍 Base path: {base_path}")
-        st.write(f"🔍 TürkiyeChatbot klasörü var mı: {os.path.exists('TürkiyeChatbot')}")
-        
-        if os.path.exists("TürkiyeChatbot"):
-            turkiye_files = os.listdir("TürkiyeChatbot")
-            st.write(f"📁 TürkiyeChatbot içindeki dosyalar: {', '.join(turkiye_files[:15])}")
-        
         if not os.path.exists(faiss_path):
-            st.error(f"❌ turkiye_index.faiss dosyası bulunamadı! Aranan yol: {faiss_path}")
+            st.error(f"❌ turkiye_index.faiss dosyası bulunamadı!")
             st.stop()
         if not os.path.exists(npy_path):
-            st.error(f"❌ turkiye_files.npy dosyası bulunamadı! Aranan yol: {npy_path}")
+            st.error(f"❌ turkiye_files.npy dosyası bulunamadı!")
             st.stop()
         
         try:
