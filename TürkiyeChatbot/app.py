@@ -25,10 +25,34 @@ if _is_streamlit:
 
     @st.cache_resource
     def load_components():
-        model = SentenceTransformer("paraphrase-multilingual-MiniLM-L12-v2")
-        index = faiss.read_index("turkiye_index.faiss")
-        file_names = np.load("turkiye_files.npy", allow_pickle=True)
-        return model, index, file_names
+        import os
+        # Mevcut dizini ve dosyaları kontrol et
+        current_dir = os.getcwd()
+        st.write(f"📁 Mevcut dizin: {current_dir}")
+        
+        # Dosyaları ara
+        files_in_dir = os.listdir(current_dir)
+        st.write(f"📄 Dizindeki dosyalar: {', '.join(files_in_dir[:10])}...")
+        
+        # Dosyaların varlığını kontrol et
+        faiss_path = "turkiye_index.faiss"
+        npy_path = "turkiye_files.npy"
+        
+        if not os.path.exists(faiss_path):
+            st.error(f"❌ turkiye_index.faiss dosyası bulunamadı! Dizin: {current_dir}")
+            st.stop()
+        if not os.path.exists(npy_path):
+            st.error(f"❌ turkiye_files.npy dosyası bulunamadı! Dizin: {current_dir}")
+            st.stop()
+        
+        try:
+            model = SentenceTransformer("paraphrase-multilingual-MiniLM-L12-v2")
+            index = faiss.read_index(faiss_path)
+            file_names = np.load(npy_path, allow_pickle=True)
+            return model, index, file_names
+        except Exception as e:
+            st.error(f"❌ Model yüklenirken hata: {e}")
+            st.stop()
 
     if "model" not in st.session_state:
         st.session_state.model, st.session_state.index, st.session_state.file_names = load_components()
