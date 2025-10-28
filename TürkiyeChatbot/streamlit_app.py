@@ -29,9 +29,30 @@ client = OpenAI(api_key=api_key)
 @st.cache_resource
 def load_components():
     try:
+        import os
+        # Mevcut dizini ve dosyaları kontrol et
+        current_dir = os.getcwd()
+        st.write(f"📁 Mevcut dizin: {current_dir}")
+        
+        # Dosyaları ara
+        if os.path.exists(current_dir):
+            files_in_dir = os.listdir(current_dir)
+            st.write(f"📄 Dizindeki dosyalar: {', '.join([f for f in files_in_dir if not f.startswith('.')][:10])}...")
+        
+        # Dosyaların varlığını kontrol et
+        faiss_path = "turkiye_index.faiss"
+        npy_path = "turkiye_files.npy"
+        
+        if not os.path.exists(faiss_path):
+            st.error(f"❌ turkiye_index.faiss dosyası bulunamadı! Dizin: {current_dir}")
+            st.stop()
+        if not os.path.exists(npy_path):
+            st.error(f"❌ turkiye_files.npy dosyası bulunamadı! Dizin: {current_dir}")
+            st.stop()
+        
         model = SentenceTransformer("paraphrase-multilingual-MiniLM-L12-v2")
-        index = faiss.read_index("turkiye_index.faiss")
-        file_names = np.load("turkiye_files.npy", allow_pickle=True)
+        index = faiss.read_index(faiss_path)
+        file_names = np.load(npy_path, allow_pickle=True)
         return model, index, file_names
     except Exception as e:
         st.error(f"❌ Model yüklenirken hata: {e}")
