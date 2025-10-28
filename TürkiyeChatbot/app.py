@@ -44,11 +44,19 @@ if _is_streamlit:
         faiss_path = os.path.join(base_path, "turkiye_index.faiss")
         npy_path = os.path.join(base_path, "turkiye_files.npy")
         
+        st.write(f"🔍 Aradığım yol: {faiss_path}")
+        st.write(f"🔍 Base path: {base_path}")
+        st.write(f"🔍 TürkiyeChatbot klasörü var mı: {os.path.exists('TürkiyeChatbot')}")
+        
+        if os.path.exists("TürkiyeChatbot"):
+            turkiye_files = os.listdir("TürkiyeChatbot")
+            st.write(f"📁 TürkiyeChatbot içindeki dosyalar: {', '.join(turkiye_files[:15])}")
+        
         if not os.path.exists(faiss_path):
-            st.error(f"❌ turkiye_index.faiss dosyası bulunamadı! Dizin: {current_dir}")
+            st.error(f"❌ turkiye_index.faiss dosyası bulunamadı! Aranan yol: {faiss_path}")
             st.stop()
         if not os.path.exists(npy_path):
-            st.error(f"❌ turkiye_files.npy dosyası bulunamadı! Dizin: {current_dir}")
+            st.error(f"❌ turkiye_files.npy dosyası bulunamadı! Aranan yol: {npy_path}")
             st.stop()
         
         try:
