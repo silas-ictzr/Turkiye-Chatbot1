@@ -40,8 +40,10 @@ def load_components():
             st.write(f"📄 Dizindeki dosyalar: {', '.join([f for f in files_in_dir if not f.startswith('.')][:10])}...")
         
         # Dosyaların varlığını kontrol et
-        faiss_path = "turkiye_index.faiss"
-        npy_path = "turkiye_files.npy"
+        # Streamlit Cloud kök dizinde çalıştığı için TürkiyeChatbot alt klasörünü ekle
+        base_path = "TürkiyeChatbot" if os.path.exists("TürkiyeChatbot") else "."
+        faiss_path = os.path.join(base_path, "turkiye_index.faiss")
+        npy_path = os.path.join(base_path, "turkiye_files.npy")
         
         if not os.path.exists(faiss_path):
             st.error(f"❌ turkiye_index.faiss dosyası bulunamadı! Dizin: {current_dir}")
@@ -78,8 +80,12 @@ def generate_answer(query):
     try:
         relevant_files = get_relevant_texts(query)
         context = ""
+        # Streamlit Cloud için dosya yolu
+        import os
+        docs_path = os.path.join("TürkiyeChatbot", "docs", "temizlenmis") if os.path.exists("TürkiyeChatbot") else "docs/temizlenmis"
         for f in relevant_files:
-            with open(f"docs/temizlenmis/{f}", "r", encoding="utf-8") as file:
+            file_path = os.path.join(docs_path, f)
+            with open(file_path, "r", encoding="utf-8") as file:
                 context += file.read() + "\n\n"
 
         # Uzun bağlam durumunda kesme (isteğe bağlı güvenlik katmanı)
