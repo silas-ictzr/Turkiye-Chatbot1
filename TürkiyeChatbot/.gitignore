@@ -1,0 +1,12 @@
+# Gizli dosyalar ve anahtarlar
+.env
+
+# Python önbellekleri
+__pycache__/
+
+# FAISS ve numpy vektör dosyaları (deployment için gerekli)
+# *.faiss
+# *.npy
+
+# Jupyter geçici dosyaları
+.ipynb_checkpoints/
