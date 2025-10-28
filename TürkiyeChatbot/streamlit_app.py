@@ -30,15 +30,6 @@ client = OpenAI(api_key=api_key)
 def load_components():
     try:
         import os
-        # Mevcut dizini ve dosyaları kontrol et
-        current_dir = os.getcwd()
-        st.write(f"📁 Mevcut dizin: {current_dir}")
-        
-        # Dosyaları ara
-        if os.path.exists(current_dir):
-            files_in_dir = os.listdir(current_dir)
-            st.write(f"📄 Dizindeki dosyalar: {', '.join([f for f in files_in_dir if not f.startswith('.')][:10])}...")
-        
         # Dosyaların varlığını kontrol et
         # Streamlit Cloud kök dizinde çalıştığı için TürkiyeChatbot alt klasörünü ekle
         base_path = "TürkiyeChatbot" if os.path.exists("TürkiyeChatbot") else "."
@@ -46,10 +37,10 @@ def load_components():
         npy_path = os.path.join(base_path, "turkiye_files.npy")
         
         if not os.path.exists(faiss_path):
-            st.error(f"❌ turkiye_index.faiss dosyası bulunamadı! Dizin: {current_dir}")
+            st.error(f"❌ turkiye_index.faiss dosyası bulunamadı!")
             st.stop()
         if not os.path.exists(npy_path):
-            st.error(f"❌ turkiye_files.npy dosyası bulunamadı! Dizin: {current_dir}")
+            st.error(f"❌ turkiye_files.npy dosyası bulunamadı!")
             st.stop()
         
         model = SentenceTransformer("paraphrase-multilingual-MiniLM-L12-v2")
