@@ -30,31 +30,24 @@ client = OpenAI(api_key=api_key)
 def load_components():
     try:
         model = SentenceTransformer("paraphrase-multilingual-MiniLM-L12-v2")
-
-        # 🔧 FAISS ve Numpy dosyalarının doğru yoldan yüklenmesi
-        base_path = os.path.dirname(__file__)  # Bu dosyanın bulunduğu klasör
-        faiss_path = os.path.join(base_path, "turkiye_index.faiss")
-        npy_path = os.path.join(base_path, "turkiye_files.npy")
-
-        if not os.path.exists(faiss_path):
-            st.error(f"❌ FAISS dosyası bulunamadı: {faiss_path}")
-            st.stop()
-
-        index = faiss.read_index(faiss_path)
-        file_names = np.load(npy_path)
-
+        index = faiss.read_index("turkiye_index.faiss")
+        file_names = np.load("turkiye_files.npy", allow_pickle=True)
         return model, index, file_names
     except Exception as e:
         st.error(f"❌ Model yüklenirken hata: {e}")
         st.stop()
 
+# Session state ile güvenli bileşen erişimi
+if "model" not in st.session_state:
+    st.session_state.model, st.session_state.index, st.session_state.file_names = load_components()
+
 # -----------------------------
 # Benzer içerik arama
 # -----------------------------
 def get_relevant_texts(query, top_k=2):
-    query_embedding = model.encode([query])
-    distances, indices = index.search(np.array(query_embedding), top_k)
-    relevant_files = [file_names[i] for i in indices[0]]
+    query_embedding = st.session_state.model.encode([query])
+    distances, indices = st.session_state.index.search(np.array(query_embedding).astype("float32"), top_k)
+    relevant_files = [st.session_state.file_names[i] for i in indices[0]]
     return relevant_files
 
 # -----------------------------
@@ -67,6 +60,10 @@ def generate_answer(query):
         for f in relevant_files:
             with open(f"docs/temizlenmis/{f}", "r", encoding="utf-8") as file:
                 context += file.read() + "\n\n"
+
+        # Uzun bağlam durumunda kesme (isteğe bağlı güvenlik katmanı)
+        if len(context) > 8000:
+            context = context[:8000]
 
         prompt = f"""
         Aşağıda Türkiye hakkında bazı bilgiler ve bir kullanıcı sorusu var.
@@ -101,7 +98,7 @@ if st.button("Sor"):
     if user_input:
         with st.spinner("Yanıt üretiliyor..."):
             answer = generate_answer(user_input)
-            st.success(answer)
+            st.markdown(f"**Yanıt:**\n\n{answer}")
     else:
         st.warning("Lütfen bir soru yazın.")
 
