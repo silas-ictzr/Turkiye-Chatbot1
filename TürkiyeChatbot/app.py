@@ -26,7 +26,11 @@ if _is_streamlit:
     @st.cache_resource
     def load_components():
         import os
-        # Mevcut dizini ve dosyaları kontrol et
+📁 Mevcut dizin: /mount/src/turkiye-chatbot1
+
+📄 Dizindeki dosyalar: README.md, .devcontainer, .git, TürkiyeChatbot, images, .streamlit...
+
+❌ turkiye_index.faiss dosyası bulunamadı! Dizin: /mount/src/turkiye-chatbot1        # Mevcut dizini ve dosyaları kontrol et
         current_dir = os.getcwd()
         st.write(f"📁 Mevcut dizin: {current_dir}")
         
@@ -35,8 +39,10 @@ if _is_streamlit:
         st.write(f"📄 Dizindeki dosyalar: {', '.join(files_in_dir[:10])}...")
         
         # Dosyaların varlığını kontrol et
-        faiss_path = "turkiye_index.faiss"
-        npy_path = "turkiye_files.npy"
+        # Streamlit Cloud kök dizinde çalıştığı için TürkiyeChatbot alt klasörünü ekle
+        base_path = "TürkiyeChatbot" if os.path.exists("TürkiyeChatbot") else "."
+        faiss_path = os.path.join(base_path, "turkiye_index.faiss")
+        npy_path = os.path.join(base_path, "turkiye_files.npy")
         
         if not os.path.exists(faiss_path):
             st.error(f"❌ turkiye_index.faiss dosyası bulunamadı! Dizin: {current_dir}")
@@ -66,8 +72,11 @@ if _is_streamlit:
     def generate_answer(query):
         relevant_files = get_relevant_texts(query)
         context = ""
+        # Streamlit Cloud için dosya yolu
+        docs_path = os.path.join("TürkiyeChatbot", "docs", "temizlenmis") if os.path.exists("TürkiyeChatbot") else "docs/temizlenmis"
         for f in relevant_files:
-            with open(f"docs/temizlenmis/{f}", "r", encoding="utf-8") as file:
+            file_path = os.path.join(docs_path, f)
+            with open(file_path, "r", encoding="utf-8") as file:
                 context += file.read() + "\n\n"
         if len(context) > 8000:
             context = context[:8000]
